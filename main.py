@@ -19,13 +19,15 @@ secret_id = os.environ.get('app_sid', '')  # Please replace with your SecretId. 
 secret_key = os.environ.get('app_skey', '')  # Please replace with your SecretKey. 请替换为您的 SecretKey
 region = os.environ.get('app_region', '')  # Please replace with the region where COS bucket located. 请替换为您bucket 所在的地域
 # token = ''
-database_str = os.getenv('app_database_str', '')
+# database_str = os.getenv('app_database_str', '')
+database_str = "mongodb://LanceLiang:1352040930database@lanceliang-lktmq.azure.mongodb.net"
 
 # config = CosConfig(Secret_id=secret_id, Secret_key=secret_key, Region=region, Token=token)
 config = CosConfig(Secret_id=secret_id, Secret_key=secret_key, Region=region)
 client = CosS3Client(config)
 logger = logging.getLogger()
 db = pymongo.MongoClient(database_str)
+# db = pymongo.MongoClient('lanceliang-lktmq.azure.mongodb.net')
 
 
 def main_handler(event, context):
@@ -50,7 +52,7 @@ def main_handler(event, context):
             #     return "Fail"
             # logger.info("Download file [%s] Success" % key)
 
-            col = db[bucket]
+            col = db.cos_logs[bucket]
             col.insert_one({
                 'key': key,
                 'bucket': bucket,
